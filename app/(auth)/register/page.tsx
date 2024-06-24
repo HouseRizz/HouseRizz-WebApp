@@ -32,7 +32,7 @@ export default function Register() {
                 </div>
                 <AuthForm mode="register" />
                 <div className="text-center">
-                    <Link href="/auth/signin" className="font-medium text-indigo-600 hover:text-indigo-500">
+                    <Link href="/signin" className="font-medium text-indigo-600 hover:text-indigo-500">
                         Already have an account? Sign in
                     </Link>
                 </div>

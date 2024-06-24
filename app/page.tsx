@@ -1,18 +1,20 @@
 "use client";
-
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import SignOutButton from '@/components/SignOutButton';
-
 export default function Home() {
   const { user, loading } = useAuthContext();
   const router = useRouter();
+  const [userName, setUserName] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && !user) {
-      router.push('/auth/signin');
+      router.push('/signin');
+    }
+    if (user) {
+      setUserName(user.displayName || user.email || 'User');
     }
   }, [user, loading, router]);
 
@@ -21,7 +23,7 @@ export default function Home() {
   }
 
   if (!user) {
-    return null; // This will prevent any flash of content before redirect
+    return null;
   }
 
   return (
@@ -32,7 +34,7 @@ export default function Home() {
           <SignOutButton />
         </div>
         <div className="text-center mb-8">
-          <p className="mb-4">Hello, {user.email}! Welcome to your personalized shopping experience.</p>
+          <p className="mb-4">Hello,  {user.displayName || 'User'}! Welcome to your personalized shopping experience.</p>
           <Link href="/profile" className="text-blue-600 hover:underline">
             View Your Profile
           </Link>

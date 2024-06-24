@@ -48,7 +48,7 @@ export default function SignIn() {
                     </div>
                 </div>
                 <div className="text-center">
-                    <Link href="/auth/register" className="font-medium text-indigo-600 hover:text-indigo-500">
+                    <Link href="/register" className="font-medium text-indigo-600 hover:text-indigo-500">
                         Not have an account? Register
                     </Link>
                 </div>

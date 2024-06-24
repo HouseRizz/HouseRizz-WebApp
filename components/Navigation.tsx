@@ -26,8 +26,8 @@ export default function Navigation() {
                     </>
                 ) : (
                     <>
-                        <li><Link href="/auth/signin">Sign In</Link></li>
-                        <li><Link href="/auth/register">Register</Link></li>
+                        <li><Link href="/signin">Sign In</Link></li>
+                        <li><Link href="/register">Register</Link></li>
                     </>
                 )}
             </ul>

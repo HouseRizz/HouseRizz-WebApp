@@ -1,20 +1,34 @@
-"use client";
+// hooks/useAuth.ts
 import { useState, useEffect } from "react";
-import { User, onAuthStateChanged } from "firebase/auth";
+import { User, onAuthStateChanged, onIdTokenChanged } from "firebase/auth";
 import { auth } from "@/config/firebase.config";
 
-export function useAuth() {
+export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
+    const unsubscribeAuthState = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
+      } else {
+        setUser(null);
+      }
       setLoading(false);
     });
 
-    return () => unsubscribe();
+    const unsubscribeIdToken = onIdTokenChanged(auth, async (user) => {
+      if (user) {
+        const token = await user.getIdToken();
+        setUser(user);
+      }
+    });
+
+    return () => {
+      unsubscribeAuthState();
+      unsubscribeIdToken();
+    };
   }, []);
 
   return { user, loading };
-}
+};
