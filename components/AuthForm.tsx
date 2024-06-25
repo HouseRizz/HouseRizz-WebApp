@@ -74,14 +74,9 @@ export default function AuthForm({ mode }: AuthFormProps) {
                     value={password}
                     onChange={(e) => {
                         setPassword(e.target.value);
-                        if (e.target.value.length < 6) {
-                            e.target.setCustomValidity('Password must be at least 6 characters long');
-                        } else {
-                            e.target.setCustomValidity('');
-                        }
+
                     }}
                     required
-                    minLength={6}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 />
             </div>
