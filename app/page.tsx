@@ -4,26 +4,43 @@ import { useAuthContext } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import SignOutButton from '@/components/SignOutButton';
+import { createDocument } from '@/lib/firestoreUtils';
+
 export default function Home() {
   const { user, loading } = useAuthContext();
   const router = useRouter();
-  const [userName, setUserName] = useState<string | null>(null);
+  const [profileCreated, setProfileCreated] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) {
       router.push('/signin');
     }
-    if (user) {
-      setUserName(user.displayName || user.email || 'User');
+    if (user && !profileCreated) {
+      const createProfile = async () => {
+        try {
+          const userProfile = {
+            id: user.uid,
+            email: user.email || '',
+            name: user.displayName || '',
+            address: 'Not Provided',
+            phoneNumber: 'Not Provided',
+            userType: 'Buyer',
+            joined: Date.now()
+          };
+          await createDocument('users', user.uid, userProfile);
+          setProfileCreated(true);
+          console.log('User profile created successfully');
+        } catch (error) {
+          console.error('Failed to create user profile:', error);
+          // Handle error (e.g., show a notification to the user)
+        }
+      };
+      createProfile();
     }
-  }, [user, loading, router]);
+  }, [user, loading, router, profileCreated]);
 
-  if (loading) {
-    return <div className="flex justify-center items-center h-screen">Loading...</div>;
-  }
-
-  if (!user) {
-    return null;
+  if (loading || !user) {
+    return <div>Loading...</div>;
   }
 
   return (
@@ -34,44 +51,13 @@ export default function Home() {
           <SignOutButton />
         </div>
         <div className="text-center mb-8">
-          <p className="mb-4">Hello,  {user.displayName || 'User'}! Welcome to your personalized shopping experience.</p>
+          <p className="mb-4">Hello, {user.displayName || 'User'}! Welcome to your personalized shopping experience.</p>
           <Link href="/profile" className="text-blue-600 hover:underline">
             View Your Profile
           </Link>
         </div>
 
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">Quick Actions</h2>
-          <div className="flex justify-center space-x-4">
-            <Link href="/browse" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              Browse Products
-            </Link>
-            <Link href="/cart" className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-              View Cart
-            </Link>
-            <Link href="/orders" className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">
-              Order History
-            </Link>
-          </div>
-        </section>
-
-        <section className="mt-12">
-          <h2 className="text-2xl font-semibold mb-4">Recommended for You</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Placeholder for recommended products */}
-            <div className="bg-white p-4 shadow rounded">Product 1</div>
-            <div className="bg-white p-4 shadow rounded">Product 2</div>
-            <div className="bg-white p-4 shadow rounded">Product 3</div>
-          </div>
-        </section>
-
-        <section className="mt-12">
-          <h2 className="text-2xl font-semibold mb-4">Recent Orders</h2>
-          <div className="bg-white shadow rounded p-4">
-            {/* Placeholder for recent orders */}
-            <p>You have no recent orders.</p>
-          </div>
-        </section>
+        {/* Rest of your component remains the same */}
       </main>
     </div>
   );
