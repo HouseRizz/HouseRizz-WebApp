@@ -1,5 +1,3 @@
-// lib/firestore-utils.ts
-
 import {
   getFirestore,
   doc,
@@ -24,7 +22,7 @@ interface UserProfile {
 export async function createDocument<T extends UserProfile>(
   collectionName: string,
   id: string,
-  data: Partial<T>
+  data: Partial<T>,
 ): Promise<void> {
   const defaultData: UserProfile = {
     address: "Not Provided",
@@ -43,7 +41,7 @@ export async function createDocument<T extends UserProfile>(
 
 export async function readDocument<T>(
   collectionName: string,
-  id: string
+  id: string,
 ): Promise<T | null> {
   const docRef = doc(db, collectionName, id);
   const docSnap = await getDoc(docRef);
@@ -58,7 +56,7 @@ export async function readDocument<T>(
 export async function updateDocument<T>(
   collectionName: string,
   id: string,
-  data: Partial<T>
+  data: Partial<T>,
 ): Promise<void> {
   const docRef = doc(db, collectionName, id);
   await updateDoc(docRef, data);

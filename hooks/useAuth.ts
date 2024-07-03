@@ -1,4 +1,3 @@
-// hooks/useAuth.ts
 import { useState, useEffect } from "react";
 import { User, onAuthStateChanged, onIdTokenChanged } from "firebase/auth";
 import { auth } from "@/config/firebase.config";
