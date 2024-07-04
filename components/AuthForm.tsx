@@ -28,6 +28,9 @@ export default function AuthForm({ mode }: AuthFormProps) {
         : await registerWithEmail(email, password, name);
 
     if (newUser) {
+      if (mode === "register") {
+        setName(name);
+      }
       setTimeout(() => {
         router.push("/");
       }, 500);
