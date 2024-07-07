@@ -26,8 +26,16 @@ export default function ProfilePage() {
         setError(null);
         try {
             const fetchedProfile = await readDocument<UserProfile>('users', user.uid);
-            setProfile(fetchedProfile);
-            setEditedProfile(fetchedProfile);
+            if (fetchedProfile) {
+                if (!fetchedProfile.name && user.displayName) {
+                    fetchedProfile.name = user.displayName;
+                    await updateDocument('users', user.uid, { name: user.displayName });
+                }
+                setProfile(fetchedProfile);
+                setEditedProfile(fetchedProfile);
+            } else {
+                throw new Error('Profile not found');
+            }
         } catch (error) {
             console.error('Error fetching profile:', error);
             setError('Failed to fetch profile. Please try again later.');
